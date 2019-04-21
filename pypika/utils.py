@@ -92,6 +92,7 @@ def resolve_is_aggregate(values):
 
 
 def format_quotes(value, quote_char):
+    return value
     return '{quote}{value}{quote}' \
         .format(value=value, quote=quote_char or '')
 

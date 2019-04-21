@@ -353,7 +353,7 @@ class QueryBuilder(Selectable, Term):
     state to be branched immutably.
     """
 
-    def __init__(self, quote_char='"', dialect=None, wrap_union_queries=True, wrapper_cls=ValueWrapper):
+    def __init__(self, quote_char=None, dialect=None, wrap_union_queries=True, wrapper_cls=ValueWrapper):
         super(QueryBuilder, self).__init__(None)
 
         self._from = []
@@ -528,13 +528,13 @@ class QueryBuilder(Selectable, Term):
     @builder
     def where(self, criterion):
         if isinstance(criterion, EmptyCriterion):
-            return
-
+            return            
+            
         if not self._validate_table(criterion):
-            self._foreign_table = True
+            self._foreign_table = True            
 
         if self._wheres:
-            self._wheres &= criterion
+            self._wheres &= criterion            
         else:
             self._wheres = criterion
 
@@ -743,7 +743,7 @@ class QueryBuilder(Selectable, Term):
     def __hash__(self):
         return hash(self.alias) + sum(hash(clause) for clause in self._from)
 
-    def get_sql(self, with_alias=False, subquery=False, **kwargs):
+    def get_sql(self, with_alias=False, subquery=False, **kwargs):        
         kwargs.setdefault('quote_char', self.quote_char)
 
         if not (self._selects or self._insert_table or self._delete_from or self._update_table):
@@ -795,6 +795,7 @@ class QueryBuilder(Selectable, Term):
                 querystring += ' ' + self._select_sql(**kwargs)
 
         else:
+
             if self._with:
                 querystring = self._with_sql(**kwargs)
             else:
@@ -815,8 +816,8 @@ class QueryBuilder(Selectable, Term):
         if self._prewheres:
             querystring += self._prewhere_sql(**kwargs)
 
-        if self._wheres:
-            querystring += self._where_sql(**kwargs)
+        if self._wheres:            
+            querystring += self._where_sql(**kwargs)            
 
         if self._groupbys:
             querystring += self._group_sql(**kwargs)
@@ -908,7 +909,7 @@ class QueryBuilder(Selectable, Term):
         return ' PREWHERE {prewhere}'.format(
               prewhere=self._prewheres.get_sql(quote_char=quote_char, subquery=True, **kwargs))
 
-    def _where_sql(self, quote_char=None, **kwargs):
+    def _where_sql(self, quote_char=None, **kwargs):                
         return ' WHERE {where}'.format(where=self._wheres.get_sql(quote_char=quote_char, subquery=True, **kwargs))
 
     def _group_sql(self, quote_char=None, groupby_alias=True, **kwargs):

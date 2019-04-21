@@ -330,7 +330,7 @@ class Criterion(Term):
 
 
 class EmptyCriterion:
-    def __and__(self, other):
+    def __and__(self, other):        
         return other
 
     def __or__(self, other):
@@ -600,6 +600,7 @@ class ComplexCriterion(BasicCriterion):
             left=self.left.get_sql(subcriterion=self.needs_brackets(self.left), **kwargs),
             right=self.right.get_sql(subcriterion=self.needs_brackets(self.right), **kwargs),
         )
+        sql = sql.replace("'%s'", "%s")
 
         if subcriterion:
             return '({criterion})'.format(
